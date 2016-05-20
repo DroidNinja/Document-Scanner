@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_width="@dimen/item_width"
+    android:layout_height="@dimen/item_height"
+    android:clipChildren="false"
+    android:clickable="true">
+
+    <ImageView
+        android:id="@+id/noteGroup_iv"
+        android:layout_width="@dimen/item_width"
+        android:layout_height="@dimen/item_height"
+        android:scaleType="centerCrop"
+        />
+
+    <CheckBox
+        android:id="@+id/isSelected_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:background="@color/transparent_dark_blue_color"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+
+        <TextView
+            android:id="@+id/noteGroupName_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Document 1"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/numOfNotes_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="4 Docs"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            android:layout_marginTop="3dp"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

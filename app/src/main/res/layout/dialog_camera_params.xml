@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@color/colorAccent"
+              style="@style/LinearLayout.ActionsDialog">
+
+    <RelativeLayout
+         style="@style/RelativeLayout.SettingsItem">
+
+        <TextView
+             android:text="@string/lbl_quality"
+             style="@style/TextView.CameraSettingsItemTitle"/>
+
+        <Spinner
+             android:id="@+id/qualities"
+             style="@style/Spinner.CameraParamsItem"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+         style="@style/RelativeLayout.SettingsItem"
+        android:visibility="gone">
+
+        <TextView
+             android:text="@string/lbl_ratio"
+             style="@style/TextView.CameraSettingsItemTitle"/>
+
+        <Spinner
+             android:id="@+id/ratios"
+             style="@style/Spinner.CameraParamsItem"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout style="@style/RelativeLayout.SettingsItem">
+
+        <TextView
+             android:text="@string/lbl_focus_mode"
+             style="@style/TextView.CameraSettingsItemTitle"/>
+
+        <Spinner
+             android:id="@+id/focus_modes"
+             style="@style/Spinner.CameraParamsItem"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+         android:id="@+id/relativeHdr"
+         style="@style/RelativeLayout.SettingsItem">
+
+        <TextView
+             android:text="@string/lbl_hdr"
+             style="@style/TextView.CameraSettingsItemTitle"/>
+
+        <Switch
+             android:id="@+id/switchHDR"
+             style="@style/Switch.SettingsItem"/>
+
+    </RelativeLayout>
+
+    <Button
+         android:id="@+id/close"
+         android:text="@string/lbl_close"
+         android:textColor="@android:color/white"
+         android:layout_marginTop="@dimen/base_padding"
+        android:background="@android:color/transparent"
+         style="@style/Button.ActionDialog"/>
+
+</LinearLayout>

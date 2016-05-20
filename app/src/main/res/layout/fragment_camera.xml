@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/camera_background">
+
+    <FrameLayout
+         android:id="@+id/camera_preview"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+        android:layout_above="@+id/controls_layout"
+       >
+
+
+    </FrameLayout>
+
+    <RelativeLayout
+         android:id="@+id/controls_layout"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:padding="10dp"
+         >
+
+        <ImageButton
+            android:id="@+id/capture"
+            android:src="@drawable/camera_capture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"
+            />
+
+
+        <ImageView
+            android:id="@+id/preview_iv"
+            android:layout_width="50dp"
+            android:layout_height="55dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/captureMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/single_mode"
+            android:textColor="@android:color/white"
+            android:drawableTop="@drawable/ic_capture_single_off"
+            android:textSize="10sp"
+            android:layout_centerVertical="true"
+            android:padding="5dp"
+            android:clickable="true"
+            />
+
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/flash_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:scaleType="fitXY"
+        app:elevation="5dp"
+        app:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/cam_flash_auto_icn"
+        />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/camera_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/flash_mode"
+        app:backgroundTint="@color/colorPrimary"
+        android:src="@android:drawable/ic_menu_more"
+        android:layout_margin="10dp"
+        android:scaleType="fitXY"
+        app:elevation="5dp"
+        />
+
+</RelativeLayout>

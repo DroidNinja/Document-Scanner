@@ -1,0 +1,124 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="windowActionModeOverlay">true</item>
+    </style>
+
+
+    <style name="FullscreenTheme" parent="android:Theme.Holo">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="android:Widget.Holo.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="Theme.TranslucentNavigationBar" parent="android:Theme.Holo.Light.NoActionBar.TranslucentDecor">
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+
+    <style name="Theme.TransparentActionBar" parent="android:Theme.Holo.NoActionBar.TranslucentDecor">
+        <item name="android:actionBarStyle">@style/Widget.ActionBar.Transparent</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowActionBar">true</item>
+        <item name="android:windowNoTitle">false</item>
+    </style>
+
+    <style name="Widget.ActionBar.Transparent" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">#55000000</item>
+    </style>
+
+    <!--RelativeLayout-->
+    <style name="RelativeLayout"/>
+
+    <style name="RelativeLayout.SettingsItem" parent="RelativeLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/base_padding</item>
+    </style>
+
+    <!--Switch-->
+    <style name="Switch"/>
+
+    <style name="Switch.SettingsItem" parent="Switch">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <!--Spinner-->
+    <style name="Spinner"/>
+
+    <style name="Spinner.CameraParamsItem" parent="Spinner">
+        <item name="android:layout_width">@dimen/camera_screen_dialog_spinner_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <!-- TextView-->
+    <style name="TextView"/>
+
+    <style name="TextView.SettingsItemTitle" parent="TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/settings_item_padding</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="TextView.SettingsItemValue" parent="TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/settings_item_padding</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="TextView.CameraSettingsItemTitle" parent="TextView.SettingsItemTitle">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!-- LinearLayout-->
+    <style name="LinearLayout"/>
+
+    <style name="LinearLayout.ActionsDialog" parent="LinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/input</item>
+        <item name="android:padding">@dimen/base_padding</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <!-- Button-->
+    <style name="Button"/>
+
+    <style name="Button.ActionDialog" parent="Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+</resources>

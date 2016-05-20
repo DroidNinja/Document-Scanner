@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="vi.pdfscanner.fragment.ImageFragment">
+
+   <vi.pdfscanner.views.PinchImageView
+       android:id="@+id/preview_iv"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent" />
+
+   <ProgressBar
+       android:id="@+id/progress"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_centerInParent="true"
+       android:visibility="gone"/>
+
+   <LinearLayout
+       android:id="@+id/bottom_bar"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignParentBottom="true"
+       android:background="@android:color/transparent">
+
+      <ImageButton
+          android:id="@+id/share_ib"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:src="@drawable/ic_share"
+          android:background="@android:color/transparent"
+          android:padding="15dp"
+          />
+      <ImageButton
+          android:id="@+id/rotate_left_ib"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:src="@drawable/ic_rotate_left"
+          android:background="@android:color/transparent"
+          android:padding="15dp"
+          />
+      <ImageButton
+          android:id="@+id/rotate_right_ib"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:scaleX="-1"
+          android:src="@drawable/ic_rotate_left"
+          android:background="@android:color/transparent"
+          android:padding="15dp"
+          />
+      <ImageButton
+          android:id="@+id/delete_ib"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:src="@drawable/ic_delete"
+          android:background="@android:color/transparent"
+          android:padding="15dp"
+          />
+
+   </LinearLayout>
+</RelativeLayout>
