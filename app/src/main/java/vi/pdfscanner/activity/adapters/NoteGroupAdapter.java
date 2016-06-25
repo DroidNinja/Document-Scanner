@@ -164,7 +164,10 @@ public class NoteGroupAdapter extends RecyclerView.Adapter<NoteGroupAdapter.Note
 
         };
 
-        ImageManager.i.loadPhoto(noteGroup.notes.get(noteGroup.notes.size()-1).getImagePath().getPath(), 400, 600, loadingTarget);
+        if(noteGroup.notes.size()>0)
+            ImageManager.i.loadPhoto(noteGroup.notes.get(noteGroup.notes.size()-1).getImagePath().getPath(), 400, 600, loadingTarget);
+        else
+            imageView.setImageResource(R.drawable.placeholder);
     }
 
     public void setNoteGroups(List<NoteGroup> noteGroups) {

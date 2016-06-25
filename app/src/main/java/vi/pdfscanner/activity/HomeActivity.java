@@ -236,6 +236,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView{
                         NoteGroupAdapter adapter = (NoteGroupAdapter) noteGroupRecyclerView.getAdapter();
                         if (adapter != null) {
                             adapter.deleteItems(checkItems);
+                            homePresenter.loadNoteGroups();
                         }
                         multiSelector.clearAll();
                     }
