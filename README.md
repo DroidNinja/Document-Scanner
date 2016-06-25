@@ -1,8 +1,9 @@
 # Document Scanner
  
- This is OPENCV Framework based document scanner built by modifying various repositories on github. Some of them are:
+ This is OPENCV Framework based document scanner built by using and modifying various repositories on github. Some of them are:
   
   [AndroidScannerDemo](https://github.com/jhansireddy/AndroidScannerDemo)
+  
   [CameraModule](https://github.com/Yalantis/CameraModule)
   
   ![demo](https://lh3.googleusercontent.com/YstDXw6sQXv6tWPn1_byUIIiYmg1Qrd-aEx6NJ23iawOhuN_nPkRvc-Z6rwhh4ah=h900-rw)
