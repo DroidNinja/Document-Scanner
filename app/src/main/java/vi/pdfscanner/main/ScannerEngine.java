@@ -30,7 +30,7 @@ public class ScannerEngine {
     public native float[] getPoints(Bitmap bitmap);
 
     static {
-        System.loadLibrary("opencv_java");
+        System.loadLibrary("opencv_java3");
         System.loadLibrary("Scanner");
     }
 }
