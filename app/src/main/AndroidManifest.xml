@@ -44,7 +44,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".activity.NoteGroupActivity"
-            android:theme="@style/ToolbarTheme"
+            android:theme="@style/AppTheme"
             android:parentActivityName=".activity.HomeActivity" >
 
                 <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -56,6 +56,10 @@
         <activity android:name=".activity.PreviewActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+
+        <meta-data
+        android:name="io.fabric.ApiKey"
+        android:value="f69373ce953288159bbf0e6f0edd3380427e8f9a" />
     </application>
 
 </manifest>

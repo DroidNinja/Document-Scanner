@@ -32,6 +32,12 @@ public class NoteGroup extends BaseModel {
     @Column
     public String type;
 
+    @Column
+    public String pdfPath;
+
+    @Column
+    public int numOfImagesInPDF;
+
     public List<Note> notes;
 
     @OneToMany(methods = {OneToMany.Method.SAVE, OneToMany.Method.DELETE}, variableName = "notes")

@@ -29,15 +29,13 @@
 
             </android.support.v7.widget.RecyclerView>
 
-            <TextView
+            <ImageView
                 android:id="@+id/emptyView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="No Notes Exists!"
                 android:layout_gravity="center"
-                android:textSize="18sp"
-                android:textColor="@android:color/darker_gray"
                 android:gravity="center"
+                android:src="@drawable/empty_notes_view"
                 android:visibility="gone"/>
 
             <ProgressBar

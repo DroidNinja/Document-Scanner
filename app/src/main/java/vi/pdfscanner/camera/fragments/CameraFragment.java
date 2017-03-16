@@ -775,7 +775,7 @@ public class CameraFragment extends BaseFragment implements PhotoSavedListener, 
     }
 
     public void setPreviewImage(String path, final NoteGroup noteGroup) {
-        if(previewImageView==null || captureMode==CameraConst.CAPTURE_SINGLE_MODE)
+        if(previewImageView==null || captureMode==CameraConst.CAPTURE_SINGLE_MODE || getActivity()==null)
             return;
 
         Target loadingTarget = new Target() {

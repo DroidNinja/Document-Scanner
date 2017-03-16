@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -38,14 +39,13 @@ import vi.pdfscanner.presenters.HomePresenter;
 import vi.pdfscanner.utils.AppUtility;
 import vi.pdfscanner.utils.ItemOffsetDecoration;
 
-public class HomeActivity extends AppCompatActivity implements HomeView{
+public class HomeActivity extends BaseActivity implements HomeView{
 
-    private static final int SELECT_PHOTO = 0x201;
     @Bind(R.id.noteGroup_rv)
     RecyclerView noteGroupRecyclerView;
 
     @Bind(R.id.emptyView)
-    TextView emptyView;
+    ImageView emptyView;
 
     @Bind(R.id.progress)
     ProgressBar progressBar;
@@ -57,7 +57,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView{
     private ActionMode actionMode;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -314,10 +314,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView{
     }
 
     public void onImportGalleryClicked(MenuItem item) {
-        Intent photoPickerIntent = new Intent(
-                Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+        selectImageFromGallery(null);
     }
 
     public void onRateUsClicked(MenuItem item) {
@@ -327,38 +324,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-
-        switch(requestCode) {
-            case SELECT_PHOTO:
-                if(resultCode == RESULT_OK){
-                    Uri selectedImage = imageReturnedIntent.getData();
-                    String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-                    Cursor cursor = getContentResolver().query(selectedImage,
-                            filePathColumn, null, null, null);
-                    cursor.moveToFirst();
-
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    String picturePath = cursor.getString(columnIndex);
-
-                    File file = new File(picturePath);
-
-                    cursor.close();
-                    openScannerActivity(picturePath, file.getName());
-                }
-        }
-    }
-
-
-
-    private void openScannerActivity(String path, String name) {
-        Intent intent = new Intent(this, ScannerActivity.class);
-        intent.putExtra(BaseScannerActivity.EXTRAS.PATH, path);
-        intent.putExtra(BaseScannerActivity.EXTRAS.NAME, name);
-        intent.putExtra(BaseScannerActivity.EXTRAS.FROM_CAMERA, false);
-
-        startActivityForResult(intent, BaseScannerActivity.EXTRAS.REQUEST_PHOTO_EDIT);
-        overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
     }
 
     @Override

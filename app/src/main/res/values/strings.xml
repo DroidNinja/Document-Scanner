@@ -55,6 +55,9 @@
     <string name="import_from_gallery">Import from gallery</string>
     <string name="rate_us">Rate us</string>
     <string name="enter_name">Enter name..</string>
+    <string name="generate_pdf">Generate PDF</string>
+    <string name="share_pdf">Share PDF</string>
+    <string name="share_images">Share images</string>
 
 
 </resources>

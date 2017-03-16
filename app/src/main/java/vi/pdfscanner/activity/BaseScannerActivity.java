@@ -162,6 +162,8 @@ public abstract class BaseScannerActivity extends BaseActivity {
 
         public static final String CROPPED_PATH = "CROPPED_PATH";
 
+        public static final int FILTER_REQUEST_CODE = 3422;
+
     }
 
     @Override
@@ -169,4 +171,26 @@ public abstract class BaseScannerActivity extends BaseActivity {
         super.onBackPressed();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode)
+        {
+            case EXTRAS.FILTER_REQUEST_CODE:
+                if(resultCode== RESULT_OK && data!=null) {
+                    mNoteGroup = Parcels.unwrap(data.getParcelableExtra(NoteGroup.class.getSimpleName()));
+                    if (mNoteGroup != null) {
+                        setResult(mNoteGroup);
+                        finish();
+                    }
+                }
+                break;
+        }
+    }
+
+    protected void setResult(NoteGroup noteGroup)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(NoteGroup.class.getSimpleName(), Parcels.wrap(noteGroup));
+        setResult(RESULT_OK, intent);
+    }
 }

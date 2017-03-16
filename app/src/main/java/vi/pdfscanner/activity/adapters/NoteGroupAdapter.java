@@ -25,6 +25,7 @@ import vi.pdfscanner.R;
 import vi.pdfscanner.db.DBManager;
 import vi.pdfscanner.db.models.NoteGroup;
 import vi.pdfscanner.manager.ImageManager;
+import vi.pdfscanner.utils.DeletePhotoTask;
 import vi.pdfscanner.utils.PhotoUtil;
 
 /**
@@ -49,7 +50,7 @@ public class NoteGroupAdapter extends RecyclerView.Adapter<NoteGroupAdapter.Note
         {
             if(checkItems.get(x, false)) {
                 DBManager.getInstance().deleteNoteGroup(noteGroups.get(x).id);
-                PhotoUtil.deleteNoteGroup(noteGroups.get(x));
+                new DeletePhotoTask(noteGroups.get(x)).execute();
                 noteGroups.remove(x);
             }
         }

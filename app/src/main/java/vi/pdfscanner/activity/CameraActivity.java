@@ -57,6 +57,8 @@ public class CameraActivity extends BaseActivity implements RevealBackgroundView
     private static final String IMG_POSTFIX = ".jpg";
     private static final String TIME_FORMAT = "yyyyMMdd_HHmmss";
 
+    public static final int CAMERA_REQUEST_CODE = 0x9812;
+
     private KeyEventsListener keyEventsListener;
     private PhotoSavedListener photoSavedListener;
 
@@ -85,7 +87,7 @@ public class CameraActivity extends BaseActivity implements RevealBackgroundView
         if(mNoteGroup!=null)
             intent.putExtra(NoteGroup.class.getSimpleName(), Parcels.wrap(mNoteGroup));
 
-        startingActivity.startActivity(intent);
+        startingActivity.startActivityForResult(intent, CAMERA_REQUEST_CODE);
     }
 
     @Override
@@ -256,7 +258,6 @@ public class CameraActivity extends BaseActivity implements RevealBackgroundView
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         ImageManager.i.loadPhoto(path, metrics.widthPixels, metrics.heightPixels, loadingTarget);
-
     }
 
     private void openPreview(String path, String name) {
@@ -280,6 +281,16 @@ public class CameraActivity extends BaseActivity implements RevealBackgroundView
                     String path = data.getStringExtra(BaseScannerActivity.EXTRAS.PATH);
                     PhotoUtil.deletePhoto(path);
                     break;
+                case RESULT_OK:
+                    mNoteGroup = Parcels.unwrap(data.getParcelableExtra(NoteGroup.class.getSimpleName()));
+                    if (mNoteGroup != null) {
+                        Intent intent = new Intent();
+                        intent.putExtra(NoteGroup.class.getSimpleName(), Parcels.wrap(mNoteGroup));
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                    break;
+
             }
         }
     }

@@ -1,6 +1,7 @@
 package vi.pdfscanner.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,18 +9,26 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
 import org.parceler.Parcels;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import vi.imagestopdf.CreatePDFListener;
+import vi.imagestopdf.CreatePDFTask;
+import vi.imagestopdf.PDFEngine;
+import vi.imagestopdf.Utils;
 import vi.pdfscanner.R;
 import vi.pdfscanner.activity.adapters.MultiSelector;
 import vi.pdfscanner.activity.adapters.NoteAdapter;
@@ -28,6 +37,8 @@ import vi.pdfscanner.activity.adapters.ParcelableSparseBooleanArray;
 import vi.pdfscanner.db.DBManager;
 import vi.pdfscanner.db.models.Note;
 import vi.pdfscanner.db.models.NoteGroup;
+import vi.pdfscanner.fragment.ShareDialogFragment;
+import vi.pdfscanner.fragment.ShareDialogFragment.ShareDialogListener;
 import vi.pdfscanner.main.Const;
 import vi.pdfscanner.manager.NotificationManager;
 import vi.pdfscanner.manager.NotificationModel;
@@ -35,13 +46,10 @@ import vi.pdfscanner.manager.NotificationObserver;
 import vi.pdfscanner.utils.AppUtility;
 import vi.pdfscanner.utils.ItemOffsetDecoration;
 
-public class NoteGroupActivity extends AppCompatActivity implements NotificationObserver {
+public class NoteGroupActivity extends BaseActivity implements NotificationObserver, ShareDialogListener, CreatePDFListener {
 
     @Bind(R.id.noteGroup_rv)
     RecyclerView noteRecyclerView;
-
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
 
 
     private NoteGroup mNoteGroup;
@@ -49,9 +57,10 @@ public class NoteGroupActivity extends AppCompatActivity implements Notification
 
     public static final String IS_IN_ACTION_MODE = "IS_IN_ACTION_MODE";
     private ActionMode actionMode;
+    private boolean isShareClicked;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_group);
         ButterKnife.bind(this);
@@ -173,7 +182,6 @@ public class NoteGroupActivity extends AppCompatActivity implements Notification
     }
 
     private void setToolbar(NoteGroup mNoteGroup) {
-        setSupportActionBar(toolbar);
         // Get a support ActionBar corresponding to this toolbar
         ActionBar ab = getSupportActionBar();
 
@@ -267,5 +275,102 @@ public class NoteGroupActivity extends AppCompatActivity implements Notification
         startingLocation[0] += view.getWidth() / 2;
         CameraActivity.startCameraFromLocation(startingLocation, this, mNoteGroup);
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.note_group_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void onGeneratePDFClicked(MenuItem item) {
+        ArrayList<File> files = getFilesFromNoteGroup();
+        if(mNoteGroup.pdfPath!=null && PDFEngine.getInstance().checkIfPDFExists(files, new File(mNoteGroup.pdfPath).getName()))
+        {
+            PDFEngine.getInstance().openPDF(NoteGroupActivity.this, new File(mNoteGroup.pdfPath));
+        }
+        else {
+            PDFEngine.getInstance().createPDF(this, files, this);
+        }
+    }
+
+    public void onImportGalleryClicked(MenuItem item) {
+       selectImageFromGallery(mNoteGroup);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == BaseScannerActivity.EXTRAS.REQUEST_PHOTO_EDIT ||
+                requestCode == CameraActivity.CAMERA_REQUEST_CODE) {
+            if (resultCode == RESULT_OK && data != null) {
+                mNoteGroup = Parcels.unwrap(data.getParcelableExtra(NoteGroup.class.getSimpleName()));
+                if (mNoteGroup != null) {
+                    updateView(mNoteGroup);
+                }
+            }
+        }
+    }
+
+    private void updateView(NoteGroup mNoteGroup) {
+        NoteAdapter noteAdapter = (NoteAdapter) noteRecyclerView.getAdapter();
+        if(noteAdapter!=null)
+        {
+            noteAdapter.setNotes(mNoteGroup.notes);
+            noteAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private ArrayList<File> getFilesFromNoteGroup()
+    {
+        ArrayList<File> files = new ArrayList<>();
+        for(int index=0;index<mNoteGroup.getNotes().size();index++)
+        {
+            File file = new File(mNoteGroup.getNotes().get(index).getImagePath().getPath());
+            if(file.exists())
+                files.add(file);
+        }
+        return files;
+    }
+
+    public void onShareButtonClicked(MenuItem item) {
+        ShareDialogFragment bottomSheetDialogFragment = ShareDialogFragment.newInstance(this);
+        bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+    }
+
+    @Override
+    public void sharePDF() {
+        ArrayList<File> files = getFilesFromNoteGroup();
+        if(mNoteGroup.pdfPath!=null && PDFEngine.getInstance().checkIfPDFExists(files, new File(mNoteGroup.pdfPath).getName()))
+        {
+            PDFEngine.getInstance().sharePDF(NoteGroupActivity.this, new File(mNoteGroup.pdfPath));
+        }
+        else {
+            isShareClicked = true;
+            PDFEngine.getInstance().createPDF(this, files, this);
+        }
+    }
+
+    @Override
+    public void shareImage() {
+        AppUtility.shareDocuments(this, AppUtility.getUrisFromNotes(mNoteGroup.getNotes()));
+    }
+
+    @Override
+    public void onPDFGenerated(File pdfFile, int numOfImages) {
+        if(pdfFile != null) {
+            this.mNoteGroup.pdfPath = pdfFile.getPath();
+            if (pdfFile.exists()) {
+                if(!isShareClicked)
+                    PDFEngine.getInstance().openPDF(NoteGroupActivity.this, pdfFile);
+                else
+                    PDFEngine.getInstance().sharePDF(NoteGroupActivity.this, pdfFile);
+
+                DBManager.getInstance().updateNoteGroupPDFInfo(mNoteGroup.id, pdfFile.getPath(), numOfImages);
+            }
+            isShareClicked = false;
+        }
     }
 }

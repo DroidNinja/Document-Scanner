@@ -24,28 +24,33 @@
 package vi.pdfscanner.activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import org.parceler.Parcels;
+
+import java.io.File;
+
+import vi.pdfscanner.R;
+import vi.pdfscanner.db.models.NoteGroup;
+
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected Handler handler;
+    private static final int SELECT_PHOTO = 0x201;
+    private NoteGroup noteGroup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        handler = new Handler(new Handler.Callback() {
-
-            @Override
-            public boolean handleMessage(Message msg) {
-                return BaseActivity.this.handleMessage(msg);
-            }
-        });
     }
 
     protected void hideKeyboard() {
@@ -56,10 +61,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         }
-    }
-
-    protected boolean handleMessage(Message msg) {
-        return false;
     }
 
     protected void showActionBar() {
@@ -94,4 +95,48 @@ public abstract class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(menuItem);
     }
 
+    protected void selectImageFromGallery(NoteGroup noteGroup)
+    {
+        this.noteGroup = noteGroup;
+        Intent photoPickerIntent = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case SELECT_PHOTO:
+                if(resultCode == RESULT_OK){
+                    Uri selectedImage = data.getData();
+                    String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+                    Cursor cursor = getContentResolver().query(selectedImage,
+                            filePathColumn, null, null, null);
+                    cursor.moveToFirst();
+
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    String picturePath = cursor.getString(columnIndex);
+
+                    File file = new File(picturePath);
+
+                    cursor.close();
+                    openScannerActivity(picturePath, file.getName(), noteGroup);
+                }
+        }
+    }
+
+    private void openScannerActivity(String picturePath, String name, NoteGroup noteGroup) {
+        Intent intent = new Intent(this, ScannerActivity.class);
+        intent.putExtra(BaseScannerActivity.EXTRAS.PATH, picturePath);
+        intent.putExtra(BaseScannerActivity.EXTRAS.NAME, name);
+        intent.putExtra(BaseScannerActivity.EXTRAS.FROM_CAMERA, false);
+        if(noteGroup!=null)
+            intent.putExtra(NoteGroup.class.getSimpleName(), Parcels.wrap(noteGroup));
+
+        startActivityForResult(intent, BaseScannerActivity.EXTRAS.REQUEST_PHOTO_EDIT);
+        overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+    }
 }

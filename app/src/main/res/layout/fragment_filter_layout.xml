@@ -35,6 +35,8 @@
             android:gravity="center_horizontal"
             android:padding="10dp"
             android:clickable="true"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@drawable/filter_btn_color"
             />
         <TextView
@@ -48,6 +50,8 @@
             android:gravity="center_horizontal"
             android:padding="10dp"
             android:clickable="true"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@drawable/filter_btn_color"
             />
         <TextView
@@ -61,6 +65,8 @@
             android:gravity="center_horizontal"
             android:padding="10dp"
             android:clickable="true"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@drawable/filter_btn_color"
             />
 

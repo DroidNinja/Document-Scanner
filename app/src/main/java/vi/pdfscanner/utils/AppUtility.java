@@ -17,9 +17,11 @@ import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import timber.log.Timber;
 import vi.pdfscanner.R;
+import vi.pdfscanner.db.models.Note;
 import vi.pdfscanner.manager.ImageManager;
 
 /**
@@ -108,5 +110,15 @@ public class AppUtility {
         } catch (ActivityNotFoundException e) {
             Toast.makeText(context, " Unable to find Play Store", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public static ArrayList<Uri> getUrisFromNotes(List<Note> notes)
+    {
+        ArrayList<Uri> uris = new ArrayList<>();
+        for (int index = 0; index < notes.size(); index++) {
+            uris.add(notes.get(index).getImagePath());
+        }
+
+        return uris;
     }
 }

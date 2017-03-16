@@ -9,9 +9,10 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:actionModeBackground">@color/colorPrimary</item>
         <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:popupMenuStyle">@style/MyPopupMenu</item>
     </style>
 
-    <style name="ToolbarTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="ToolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -31,18 +32,6 @@
 
     <style name="FullscreenActionBarStyle" parent="android:Widget.Holo.ActionBar">
         <item name="android:background">@color/black_overlay</item>
-    </style>
-
-    <style name="Theme.TranslucentNavigationBar" parent="android:Theme.Holo.Light.NoActionBar.TranslucentDecor">
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:windowFullscreen">false</item>
-    </style>
-
-    <style name="Theme.TransparentActionBar" parent="android:Theme.Holo.NoActionBar.TranslucentDecor">
-        <item name="android:actionBarStyle">@style/Widget.ActionBar.Transparent</item>
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:windowActionBar">true</item>
-        <item name="android:windowNoTitle">false</item>
     </style>
 
     <style name="Widget.ActionBar.Transparent" parent="@android:style/Widget.Holo.ActionBar">
@@ -119,6 +108,10 @@
     <style name="Button.ActionDialog" parent="Button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="MyPopupMenu" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">#2979FF</item>
     </style>
 
 </resources>

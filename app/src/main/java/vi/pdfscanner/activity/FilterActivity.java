@@ -84,9 +84,10 @@ public class FilterActivity extends BaseScannerActivity implements ScanListener{
 
                 @Override
                 public void onNoteGroupSaved(NoteGroup noteGroup) {
-                    openNoteGroupActivity(noteGroup);
+//                    openNoteGroupActivity(noteGroup);
+                    setResult(noteGroup);
+                    finish();
                 }
-
 
             }).execute();
     }

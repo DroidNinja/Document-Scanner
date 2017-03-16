@@ -7,13 +7,6 @@
     android:background="@android:color/white"
     tools:context="vi.pdfscanner.activity.NoteGroupActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark" />
-
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/noteGroup_rv"
         android:layout_width="match_parent"
@@ -22,7 +15,6 @@
         android:clipToPadding="false"
         android:padding="@dimen/item_offset"
         android:visibility="visible"
-        android:layout_below="@+id/toolbar"
         >
 
     </android.support.v7.widget.RecyclerView>

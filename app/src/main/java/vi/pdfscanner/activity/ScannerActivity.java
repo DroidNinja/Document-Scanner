@@ -44,9 +44,8 @@ public class ScannerActivity extends BaseScannerActivity implements ScanListener
         if(noteGroup!=null)
             intent.putExtra(NoteGroup.class.getSimpleName(), Parcels.wrap(noteGroup));
 
-        startActivity(intent);
+        startActivityForResult(intent, EXTRAS.FILTER_REQUEST_CODE);
         overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
-        finish();
     }
 
     @Override
@@ -81,5 +80,11 @@ public class ScannerActivity extends BaseScannerActivity implements ScanListener
                 }
             });
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 }
