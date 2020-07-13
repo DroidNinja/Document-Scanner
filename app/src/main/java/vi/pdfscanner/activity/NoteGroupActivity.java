@@ -2,14 +2,14 @@ package vi.pdfscanner.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import androidx.appcompat.view.ActionMode;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,14 +26,12 @@ import java.util.Observable;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import vi.imagestopdf.CreatePDFListener;
-import vi.imagestopdf.CreatePDFTask;
 import vi.imagestopdf.PDFEngine;
-import vi.imagestopdf.Utils;
 import vi.pdfscanner.R;
 import vi.pdfscanner.activity.adapters.MultiSelector;
 import vi.pdfscanner.activity.adapters.NoteAdapter;
-import vi.pdfscanner.activity.adapters.NoteGroupAdapter;
 import vi.pdfscanner.activity.adapters.ParcelableSparseBooleanArray;
+import vi.pdfscanner.databinding.ActivityNoteGroupBinding;
 import vi.pdfscanner.db.DBManager;
 import vi.pdfscanner.db.models.Note;
 import vi.pdfscanner.db.models.NoteGroup;
@@ -48,10 +46,6 @@ import vi.pdfscanner.utils.ItemOffsetDecoration;
 
 public class NoteGroupActivity extends BaseActivity implements NotificationObserver, ShareDialogListener, CreatePDFListener {
 
-    @Bind(R.id.noteGroup_rv)
-    RecyclerView noteRecyclerView;
-
-
     private NoteGroup mNoteGroup;
     private MultiSelector multiSelector;
 
@@ -59,11 +53,13 @@ public class NoteGroupActivity extends BaseActivity implements NotificationObser
     private ActionMode actionMode;
     private boolean isShareClicked;
 
+    ActivityNoteGroupBinding binding;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_note_group);
-        ButterKnife.bind(this);
+        binding = ActivityNoteGroupBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         init();
         if (savedInstanceState != null) {
             restoreSavedState(savedInstanceState);
@@ -86,7 +82,7 @@ public class NoteGroupActivity extends BaseActivity implements NotificationObser
         registerNotifications();
         mNoteGroup = Parcels.unwrap(getIntent().getParcelableExtra(NoteGroup.class.getSimpleName()));
 
-        multiSelector = new MultiSelector(noteRecyclerView);
+        multiSelector = new MultiSelector(binding.noteGroupRv);
         if(mNoteGroup!=null && mNoteGroup.notes.size()>0) {
             setUpNoteList(mNoteGroup.notes);
             setToolbar(mNoteGroup);
@@ -142,14 +138,14 @@ public class NoteGroupActivity extends BaseActivity implements NotificationObser
             actionMode = null;
 //            multiSelector.clearAll();
 
-            NoteAdapter adapter = (NoteAdapter) noteRecyclerView.getAdapter();
+            NoteAdapter adapter = (NoteAdapter) binding.noteGroupRv.getAdapter();
             if(adapter!=null)
                 adapter.setNormalChoiceMode();
         }
     };
 
     private void onShareOptionClicked() {
-        NoteAdapter adapter = (NoteAdapter) noteRecyclerView.getAdapter();
+        NoteAdapter adapter = (NoteAdapter) binding.noteGroupRv.getAdapter();
         if(adapter!=null)
         {
             AppUtility.shareDocuments(this,adapter.getCheckedNotes());
@@ -161,7 +157,7 @@ public class NoteGroupActivity extends BaseActivity implements NotificationObser
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ParcelableSparseBooleanArray checkItems = multiSelector.getCheckedItems();
-                NoteAdapter adapter = (NoteAdapter) noteRecyclerView.getAdapter();
+                NoteAdapter adapter = (NoteAdapter) binding.noteGroupRv.getAdapter();
                 if (adapter != null) {
                     adapter.deleteItems(checkItems);
                 }
@@ -191,11 +187,11 @@ public class NoteGroupActivity extends BaseActivity implements NotificationObser
     }
 
     private void setUpNoteList(List<Note> notes) {
-        noteRecyclerView.setHasFixedSize(true);
+        binding.noteGroupRv.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        noteRecyclerView.setLayoutManager(gridLayoutManager);
+        binding.noteGroupRv.setLayoutManager(gridLayoutManager);
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.item_offset);
-        noteRecyclerView.addItemDecoration(itemDecoration);
+        binding.noteGroupRv.addItemDecoration(itemDecoration);
 
         NoteAdapter adapter = new NoteAdapter(notes, multiSelector);
         adapter.setCallback(new NoteAdapter.Callback() {
@@ -218,7 +214,7 @@ public class NoteGroupActivity extends BaseActivity implements NotificationObser
                 updateActionModeTitle();
             }
         });
-        noteRecyclerView.setAdapter(adapter);
+        binding.noteGroupRv.setAdapter(adapter);
 
     }
 
@@ -261,7 +257,7 @@ public class NoteGroupActivity extends BaseActivity implements NotificationObser
         Note note = (Note) notificationModel.request;
         if(note!=null)
         {
-            NoteAdapter adapter = (NoteAdapter) noteRecyclerView.getAdapter();
+            NoteAdapter adapter = (NoteAdapter) binding.noteGroupRv.getAdapter();
             if(adapter!=null)
             {
                 adapter.deleteItem(note);
@@ -315,7 +311,7 @@ public class NoteGroupActivity extends BaseActivity implements NotificationObser
     }
 
     private void updateView(NoteGroup mNoteGroup) {
-        NoteAdapter noteAdapter = (NoteAdapter) noteRecyclerView.getAdapter();
+        NoteAdapter noteAdapter = (NoteAdapter) binding.noteGroupRv.getAdapter();
         if(noteAdapter!=null)
         {
             noteAdapter.setNotes(mNoteGroup.notes);

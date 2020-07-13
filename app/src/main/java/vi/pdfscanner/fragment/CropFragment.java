@@ -32,7 +32,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -40,11 +39,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.scanlibrary.PolygonView;
-import com.scanlibrary.ProgressDialogFragment;
-import com.scanlibrary.SingleButtonDialogFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +51,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vi.pdfscanner.R;
+import vi.pdfscanner.databinding.FragmentPhotoCropBinding;
 import vi.pdfscanner.interfaces.ScanListener;
 import vi.pdfscanner.main.ScannerEngine;
 import vi.pdfscanner.utils.AppUtility;
@@ -65,19 +62,8 @@ public class CropFragment extends BaseFragment {
 
     private ScanListener scanListener;
 
-    @Bind(R.id.sourceImageView)
-    ImageView sourceImageView;
-
-    @Bind(R.id.sourceFrame)
-    FrameLayout sourceFrame;
-
-    @Bind(R.id.polygonView)
-    PolygonView polygonView;
-
-    @Bind(R.id.progress)
-    ProgressBar progressBar;
-
     private ProgressDialog progressDialog;
+    private FragmentPhotoCropBinding binding;
 
 
     public static CropFragment newInstance(Bitmap bitmap) {
@@ -89,17 +75,15 @@ public class CropFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_photo_crop, container, false);
-        ButterKnife.bind(this, view);
-
-        return view;
+        binding = FragmentPhotoCropBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        progressBar.setVisibility(View.VISIBLE);
-        sourceFrame.post(new Runnable() {
+        binding.progress.setVisibility(View.VISIBLE);
+        binding.sourceFrame.post(new Runnable() {
             @Override
             public void run() {
                 if (bitmap != null) {
@@ -126,13 +110,13 @@ public class CropFragment extends BaseFragment {
 
     @OnClick(R.id.rotate_right_ib)
     public void onRotateRightClicked(View view) {
-        progressBar.setVisibility(View.VISIBLE);
+        binding.progress.setVisibility(View.VISIBLE);
         scanListener.onRotateRightClicked();
     }
 
     @OnClick(R.id.rotate_left_ib)
     public void onRotateLeftClicked(View view) {
-        progressBar.setVisibility(View.VISIBLE);
+        binding.progress.setVisibility(View.VISIBLE);
         scanListener.onRotateLeftClicked();
     }
 
@@ -142,7 +126,7 @@ public class CropFragment extends BaseFragment {
     }
 
     public void applyCrop() {
-        Map<Integer, PointF> points = polygonView.getPoints();
+        Map<Integer, PointF> points = binding.polygonView.getPoints();
         if (isScanPointsValid(points)) {
             new ScanAsyncTask(points).execute();
         } else {
@@ -153,17 +137,17 @@ public class CropFragment extends BaseFragment {
 
     public void setBitmap(Bitmap original) {
         bitmap = original;
-        Bitmap scaledBitmap = scaledBitmap(original, sourceFrame.getWidth(), sourceFrame.getHeight());
-        sourceImageView.setImageBitmap(scaledBitmap);
-        Bitmap tempBitmap = ((BitmapDrawable) sourceImageView.getDrawable()).getBitmap();
+        Bitmap scaledBitmap = scaledBitmap(original, binding.sourceFrame.getWidth(), binding.sourceFrame.getHeight());
+        binding.sourceImageView.setImageBitmap(scaledBitmap);
+        Bitmap tempBitmap = ((BitmapDrawable) binding.sourceImageView.getDrawable()).getBitmap();
         Map<Integer, PointF> pointFs = getEdgePoints(tempBitmap);
-        polygonView.setPoints(pointFs);
-        polygonView.setVisibility(View.VISIBLE);
+        binding.polygonView.setPoints(pointFs);
+        binding.polygonView.setVisibility(View.VISIBLE);
         int padding = (int) getResources().getDimension(com.scanlibrary.R.dimen.scanPadding);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(tempBitmap.getWidth() + 2 * padding, tempBitmap.getHeight() + 2 * padding);
         layoutParams.gravity = Gravity.CENTER;
-        polygonView.setLayoutParams(layoutParams);
-        progressBar.setVisibility(View.GONE);
+        binding.polygonView.setLayoutParams(layoutParams);
+        binding.progress.setVisibility(View.GONE);
     }
 
     private Map<Integer, PointF> getEdgePoints(Bitmap tempBitmap) {
@@ -202,8 +186,8 @@ public class CropFragment extends BaseFragment {
     }
 
     private Map<Integer, PointF> orderedValidEdgePoints(Bitmap tempBitmap, List<PointF> pointFs) {
-        Map<Integer, PointF> orderedPoints = polygonView.getOrderedPoints(pointFs);
-        if (!polygonView.isValidShape(orderedPoints)) {
+        Map<Integer, PointF> orderedPoints = binding.polygonView.getOrderedPoints(pointFs);
+        if (!binding.polygonView.isValidShape(orderedPoints)) {
             orderedPoints = getOutlinePoints(tempBitmap);
         }
         return orderedPoints;
@@ -224,8 +208,8 @@ public class CropFragment extends BaseFragment {
     }
 
     private Bitmap getScannedBitmap(Bitmap original, Map<Integer, PointF> points) {
-        float xRatio = (float) original.getWidth() / sourceImageView.getWidth();
-        float yRatio = (float) original.getHeight() / sourceImageView.getHeight();
+        float xRatio = (float) original.getWidth() / binding.sourceImageView.getWidth();
+        float yRatio = (float) original.getHeight() / binding.sourceImageView.getHeight();
 
         float x1 = (points.get(0).x) * xRatio;
         float x2 = (points.get(1).x) * xRatio;

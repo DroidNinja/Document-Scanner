@@ -2,13 +2,13 @@ package vi.pdfscanner.activity;
 
 
 import android.graphics.BitmapFactory;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.view.View;
 
@@ -17,6 +17,7 @@ import com.squareup.picasso.Target;
 
 import org.parceler.Parcels;
 
+import vi.pdfscanner.databinding.ActivityBasePhotoBinding;
 import vi.pdfscanner.db.models.NoteGroup;
 import vi.pdfscanner.interfaces.PhotoSavedListener;
 import vi.pdfscanner.manager.ImageManager;
@@ -32,13 +33,13 @@ public abstract class BaseScannerActivity extends BaseActivity {
     protected String name;
     protected Bitmap bitmap;
 
-    @Bind(R.id.progress)
-    protected View progressBar;
     private NoteGroup mNoteGroup;
+    private ActivityBasePhotoBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityBasePhotoBinding.inflate(getLayoutInflater());
         showActionBar();
         showBack();
         setContentView(R.layout.activity_base_photo);
@@ -115,20 +116,20 @@ public abstract class BaseScannerActivity extends BaseActivity {
 
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            progressBar.setVisibility(View.GONE);
+            binding.progress.setVisibility(View.GONE);
             BaseScannerActivity.this.bitmap = bitmap;
             showPhoto(bitmap);
         }
 
         @Override
         public void onBitmapFailed(Drawable errorDrawable) {
-            progressBar.setVisibility(View.GONE);
+            binding.progress.setVisibility(View.GONE);
             bitmap = null;
         }
 
         @Override
         public void onPrepareLoad(Drawable placeHolderDrawable) {
-            progressBar.setVisibility(View.VISIBLE);
+            binding.progress.setVisibility(View.VISIBLE);
         }
 
     };
@@ -173,10 +174,10 @@ public abstract class BaseScannerActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode)
-        {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
             case EXTRAS.FILTER_REQUEST_CODE:
-                if(resultCode== RESULT_OK && data!=null) {
+                if (resultCode == RESULT_OK && data != null) {
                     mNoteGroup = Parcels.unwrap(data.getParcelableExtra(NoteGroup.class.getSimpleName()));
                     if (mNoteGroup != null) {
                         setResult(mNoteGroup);

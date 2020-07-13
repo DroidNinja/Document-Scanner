@@ -20,9 +20,8 @@ import com.squareup.picasso.Target;
 
 import org.parceler.Parcels;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import vi.pdfscanner.R;
+import vi.pdfscanner.databinding.ActivityWithFragmentBinding;
 import vi.pdfscanner.db.models.NoteGroup;
 import vi.pdfscanner.interfaces.CameraParamsChangedListener;
 import vi.pdfscanner.interfaces.KeyEventsListener;
@@ -72,12 +71,8 @@ public class CameraActivity extends BaseActivity implements RevealBackgroundView
     private CameraFragment fragment;
     public static final String ARG_REVEAL_START_LOCATION = "reveal_start_location";
 
-    @Bind(R.id.vRevealBackground)
-    RevealBackgroundView vRevealBackground;
-
-    @Bind(R.id.fragment_content)
-    View fragmentView;
-
+    ActivityWithFragmentBinding binding;
+    
     public static void startCameraFromLocation(int[] startingLocation, Activity startingActivity, NoteGroup mNoteGroup) {
         Intent intent = new Intent(startingActivity, CameraActivity.class);
         intent.putExtra(ARG_REVEAL_START_LOCATION, startingLocation);
@@ -93,9 +88,10 @@ public class CameraActivity extends BaseActivity implements RevealBackgroundView
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityWithFragmentBinding.inflate(getLayoutInflater());
         hideActionBar();
-        setContentView(R.layout.activity_with_fragment);
-        ButterKnife.bind(this);
+        setContentView(binding.getRoot());
+
 
         setupRevealBackground(savedInstanceState);
 
@@ -122,20 +118,20 @@ public class CameraActivity extends BaseActivity implements RevealBackgroundView
     }
 
     private void setupRevealBackground(Bundle savedInstanceState) {
-        vRevealBackground.setFillPaintColor(getResources().getColor(R.color.colorAccent));
-        vRevealBackground.setOnStateChangeListener(this);
+        binding.vRevealBackground.setFillPaintColor(getResources().getColor(R.color.colorAccent));
+        binding.vRevealBackground.setOnStateChangeListener(this);
         if (savedInstanceState == null) {
             final int[] startingLocation = getIntent().getIntArrayExtra(ARG_REVEAL_START_LOCATION);
-            vRevealBackground.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            binding.vRevealBackground.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
-                    vRevealBackground.getViewTreeObserver().removeOnPreDrawListener(this);
-                    vRevealBackground.startFromLocation(startingLocation);
+                    binding.vRevealBackground.getViewTreeObserver().removeOnPreDrawListener(this);
+                    binding.vRevealBackground.startFromLocation(startingLocation);
                     return true;
                 }
             });
         } else {
-            vRevealBackground.setToFinishedFrame();
+            binding.vRevealBackground.setToFinishedFrame();
         }
     }
 
@@ -364,10 +360,10 @@ public class CameraActivity extends BaseActivity implements RevealBackgroundView
     @Override
     public void onStateChange(int state) {
         if (RevealBackgroundView.STATE_FINISHED == state) {
-            fragmentView.setVisibility(View.VISIBLE);
+            binding.fragmentContent.setVisibility(View.VISIBLE);
 
         } else {
-            fragmentView.setVisibility(View.INVISIBLE);
+            binding.fragmentContent.setVisibility(View.INVISIBLE);
         }
     }
 }

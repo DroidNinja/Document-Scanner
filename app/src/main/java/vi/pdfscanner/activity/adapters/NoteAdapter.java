@@ -3,8 +3,8 @@ package vi.pdfscanner.activity.adapters;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +16,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -24,7 +23,6 @@ import butterknife.ButterKnife;
 import vi.pdfscanner.R;
 import vi.pdfscanner.db.DBManager;
 import vi.pdfscanner.db.models.Note;
-import vi.pdfscanner.db.models.NoteGroup;
 import vi.pdfscanner.manager.ImageManager;
 import vi.pdfscanner.utils.PhotoUtil;
 

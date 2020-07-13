@@ -1,7 +1,6 @@
 package vi.pdfscanner.db.models;
 
 import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -17,7 +16,6 @@ import vi.pdfscanner.db.PDFScannerDatabase;
 /**
  * Created by droidNinja on 19/04/16.
  */
-@ModelContainer
 @Table(database = PDFScannerDatabase.class)
 @Parcel(analyze={NoteGroup.class})
 public class NoteGroup extends BaseModel {

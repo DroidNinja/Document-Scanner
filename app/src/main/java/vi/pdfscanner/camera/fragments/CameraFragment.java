@@ -23,7 +23,6 @@
 
 package vi.pdfscanner.camera.fragments;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -31,7 +30,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
@@ -46,7 +45,6 @@ import org.parceler.Parcels;
 
 import vi.pdfscanner.R;
 import vi.pdfscanner.activity.NoteGroupActivity;
-import vi.pdfscanner.db.models.Note;
 import vi.pdfscanner.db.models.NoteGroup;
 import vi.pdfscanner.fragment.BaseFragment;
 import vi.pdfscanner.interfaces.CameraParamsChangedListener;
@@ -55,7 +53,6 @@ import vi.pdfscanner.interfaces.KeyEventsListener;
 import vi.pdfscanner.interfaces.PhotoSavedListener;
 import vi.pdfscanner.interfaces.PhotoTakenCallback;
 import vi.pdfscanner.interfaces.RawPhotoTakenCallback;
-import vi.pdfscanner.interfaces.StorageCallback;
 import vi.pdfscanner.main.CameraConst;
 
 import vi.pdfscanner.camera.model.FlashMode;
@@ -72,9 +69,7 @@ import java.util.Map;
 
 import timber.log.Timber;
 import vi.pdfscanner.manager.ImageManager;
-import vi.pdfscanner.utils.ManagedTarget;
 import vi.pdfscanner.utils.PhotoUtil;
-import vi.pdfscanner.utils.ScaleTransformation;
 import vi.pdfscanner.views.BadgeView;
 import vi.pdfscanner.views.CameraPreview;
 

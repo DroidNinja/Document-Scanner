@@ -8,40 +8,34 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vi.pdfscanner.R;
 import vi.pdfscanner.activity.PreviewActivity;
-import vi.pdfscanner.activity.adapters.NoteAdapter;
-import vi.pdfscanner.activity.adapters.ParcelableSparseBooleanArray;
+import vi.pdfscanner.databinding.FragmentImage2Binding;
+import vi.pdfscanner.databinding.FragmentPreviewBinding;
 import vi.pdfscanner.db.models.Note;
 import vi.pdfscanner.db.models.NoteGroup;
 import vi.pdfscanner.interfaces.PhotoSavedListener;
 import vi.pdfscanner.main.Const;
-import vi.pdfscanner.manager.ImageManager;
 import vi.pdfscanner.manager.NotificationManager;
 import vi.pdfscanner.utils.AppUtility;
 import vi.pdfscanner.utils.RotatePhotoTask;
-import vi.pdfscanner.utils.TransformAndSaveTask;
-import vi.pdfscanner.views.PinchImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,12 +45,6 @@ public class ImageFragment extends Fragment {
     private static final long ANIM_DURATION = 600;
     private Note note;
 
-    @Bind(R.id.preview_iv)
-    PinchImageView pinchImageView;
-
-    @Bind(R.id.progress)
-    ProgressBar progressBar;
-
     private int thumbnailTop;
     private int thumbnailLeft;
     private int thumbnailWidth;
@@ -65,6 +53,7 @@ public class ImageFragment extends Fragment {
     private int mTopDelta;
     private float mWidthScale;
     private float mHeightScale;
+    private FragmentImage2Binding binding;
 
     public ImageFragment() {
         // Required empty public constructor
@@ -82,10 +71,8 @@ public class ImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_image2, container, false);
-        ButterKnife.bind(this, view);
-
-        return view;
+        binding = FragmentImage2Binding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -138,14 +125,14 @@ public class ImageFragment extends Fragment {
 
     private void rotatePhoto(float angle)
     {
-        progressBar.setVisibility(View.VISIBLE);
+        binding.progress.setVisibility(View.VISIBLE);
         new RotatePhotoTask(note.getImagePath().getPath(), angle, new PhotoSavedListener() {
             @Override
             public void photoSaved(String path, String name) {
                 Bitmap bitmap = BitmapFactory.decodeFile(path);
                 if(bitmap!=null) {
-                    progressBar.setVisibility(View.GONE);
-                    pinchImageView.setImageBitmap(bitmap);
+                    binding.progress.setVisibility(View.GONE);
+                    binding.previewIv.setImageBitmap(bitmap);
                 }
             }
 
@@ -157,25 +144,25 @@ public class ImageFragment extends Fragment {
     }
 
     private void init() {
-        Picasso.with(getActivity()).load(note.getImagePath()).into(pinchImageView);
+        Picasso.with(getActivity()).load(note.getImagePath()).into(binding.previewIv);
 
-        ViewTreeObserver observer = pinchImageView.getViewTreeObserver();
+        ViewTreeObserver observer = binding.previewIv.getViewTreeObserver();
         observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
 
             @Override
             public boolean onPreDraw() {
-                pinchImageView.getViewTreeObserver().removeOnPreDrawListener(this);
+                binding.previewIv.getViewTreeObserver().removeOnPreDrawListener(this);
 
                 // Figure out where the thumbnail and full size versions are, relative
                 // to the screen and each other
                 int[] screenLocation = new int[2];
-                pinchImageView.getLocationOnScreen(screenLocation);
+                binding.previewIv.getLocationOnScreen(screenLocation);
                 mLeftDelta = thumbnailLeft - screenLocation[0];
                 mTopDelta = thumbnailTop - screenLocation[1];
 
                 // Scale factors to make the large version the same size as the thumbnail
-                mWidthScale = (float) thumbnailWidth / pinchImageView.getWidth();
-                mHeightScale = (float) thumbnailHeight / pinchImageView.getHeight();
+                mWidthScale = (float) thumbnailWidth / binding.previewIv.getWidth();
+                mHeightScale = (float) thumbnailHeight / binding.previewIv.getHeight();
 
                 enterAnimation();
 
@@ -193,18 +180,18 @@ public class ImageFragment extends Fragment {
         // Set starting values for properties we're going to animate. These
         // values scale and position the full size version down to the thumbnail
         // size/location, from which we'll animate it back up
-        pinchImageView.setPivotX(0);
-        pinchImageView.setPivotY(0);
-        pinchImageView.setScaleX(mWidthScale);
-        pinchImageView.setScaleY(mHeightScale);
-        pinchImageView.setTranslationX(mLeftDelta);
-        pinchImageView.setTranslationY(mTopDelta);
+        binding.previewIv.setPivotX(0);
+        binding.previewIv.setPivotY(0);
+        binding.previewIv.setScaleX(mWidthScale);
+        binding.previewIv.setScaleY(mHeightScale);
+        binding.previewIv.setTranslationX(mLeftDelta);
+        binding.previewIv.setTranslationY(mTopDelta);
 
         // interpolator where the rate of change starts out quickly and then decelerates.
         TimeInterpolator sDecelerator = new DecelerateInterpolator();
 
         // Animate scale and translation to go from thumbnail to full size
-        pinchImageView.animate().setDuration(ANIM_DURATION).scaleX(1).scaleY(1).
+        binding.previewIv.animate().setDuration(ANIM_DURATION).scaleX(1).scaleY(1).
                 translationX(0).translationY(0).setInterpolator(sDecelerator);
 
         // Fade in the black background
@@ -224,7 +211,7 @@ public class ImageFragment extends Fragment {
     public void exitAnimation(final Runnable endAction) {
 
         TimeInterpolator sInterpolator = new AccelerateInterpolator();
-        pinchImageView.animate().setDuration(ANIM_DURATION).scaleX(mWidthScale).scaleY(mHeightScale).
+        binding.previewIv.animate().setDuration(ANIM_DURATION).scaleX(mWidthScale).scaleY(mHeightScale).
                 translationX(mLeftDelta).translationY(mTopDelta)
                 .setInterpolator(sInterpolator).withEndAction(endAction);
 

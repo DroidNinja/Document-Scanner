@@ -11,7 +11,6 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.raizlabs.android.dbflow.structure.container.ForeignKeyContainer;
 
 import org.parceler.Parcel;
 import org.parceler.Transient;
@@ -40,12 +39,12 @@ public class Note extends BaseModel{
     public Date createdAt;
 
     @Column
-    @ForeignKey(references = {@ForeignKeyReference(columnName = "noteGroupId", columnType = Integer.class, foreignKeyColumnName = "id")}, saveForeignKeyModel = false, onDelete = ForeignKeyAction.CASCADE, onUpdate = ForeignKeyAction.CASCADE)
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "noteGroupId",  foreignKeyColumnName = "id")}, saveForeignKeyModel = false, onDelete = ForeignKeyAction.CASCADE, onUpdate = ForeignKeyAction.CASCADE)
     @Transient
-    ForeignKeyContainer<NoteGroup> noteGroupForeignKeyContainer;
+    NoteGroup noteGroupForeignKeyContainer;
 
     public void associateNoteGroup(NoteGroup noteGroup) {
-        noteGroupForeignKeyContainer = FlowManager.getContainerAdapter(NoteGroup.class).toForeignKeyContainer(noteGroup);
+        noteGroupForeignKeyContainer = noteGroup;
     }
 
     public Uri getImagePath()

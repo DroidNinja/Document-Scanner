@@ -1,19 +1,13 @@
 package vi.pdfscanner.utils;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,7 +16,6 @@ import java.util.List;
 import timber.log.Timber;
 import vi.pdfscanner.R;
 import vi.pdfscanner.db.models.Note;
-import vi.pdfscanner.manager.ImageManager;
 
 /**
  * Created by droidNinja on 19/04/16.

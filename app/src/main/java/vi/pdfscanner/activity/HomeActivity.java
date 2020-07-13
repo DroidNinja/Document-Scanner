@@ -3,14 +3,12 @@ package vi.pdfscanner.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.view.ActionMode;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,12 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 
 import org.parceler.Parcels;
 
-import java.io.File;
 import java.util.List;
 
 import butterknife.Bind;
@@ -33,6 +29,7 @@ import vi.pdfscanner.activity.adapters.MultiSelector;
 import vi.pdfscanner.activity.adapters.NoteGroupAdapter;
 import vi.pdfscanner.activity.adapters.ParcelableSparseBooleanArray;
 import vi.pdfscanner.activity.callbacks.HomeView;
+import vi.pdfscanner.databinding.ActivityMainBinding;
 import vi.pdfscanner.db.models.NoteGroup;
 import vi.pdfscanner.main.Const;
 import vi.pdfscanner.presenters.HomePresenter;
@@ -41,25 +38,18 @@ import vi.pdfscanner.utils.ItemOffsetDecoration;
 
 public class HomeActivity extends BaseActivity implements HomeView{
 
-    @Bind(R.id.noteGroup_rv)
-    RecyclerView noteGroupRecyclerView;
-
-    @Bind(R.id.emptyView)
-    ImageView emptyView;
-
-    @Bind(R.id.progress)
-    ProgressBar progressBar;
-
     HomePresenter homePresenter;
 
     public static final String IS_IN_ACTION_MODE = "IS_IN_ACTION_MODE";
     private MultiSelector multiSelector;
     private ActionMode actionMode;
+    ActivityMainBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         ButterKnife.bind(this);
 
         init();
@@ -113,13 +103,13 @@ public class HomeActivity extends BaseActivity implements HomeView{
     }
 
     private void setUpNoteGroupList() {
-        multiSelector = new MultiSelector(noteGroupRecyclerView);
+        multiSelector = new MultiSelector(binding.noteGroupRv);
 
-        noteGroupRecyclerView.setHasFixedSize(true);
+        binding.noteGroupRv.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        noteGroupRecyclerView.setLayoutManager(gridLayoutManager);
+        binding.noteGroupRv.setLayoutManager(gridLayoutManager);
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.item_offset);
-        noteGroupRecyclerView.addItemDecoration(itemDecoration);
+        binding.noteGroupRv.addItemDecoration(itemDecoration);
 
         NoteGroupAdapter adapter = new NoteGroupAdapter(this, multiSelector);
         adapter.setCallback(new NoteGroupAdapter.Callback() {
@@ -146,7 +136,7 @@ public class HomeActivity extends BaseActivity implements HomeView{
                 updateActionModeTitle();
             }
         });
-        noteGroupRecyclerView.setAdapter(adapter);
+        binding.noteGroupRv.setAdapter(adapter);
     }
 
     private void showEditActionMode(boolean b) {
@@ -202,14 +192,14 @@ public class HomeActivity extends BaseActivity implements HomeView{
             actionMode = null;
 //            multiSelector.clearAll();
 
-            NoteGroupAdapter adapter = (NoteGroupAdapter) noteGroupRecyclerView.getAdapter();
+            NoteGroupAdapter adapter = (NoteGroupAdapter) binding.noteGroupRv.getAdapter();
             if(adapter!=null)
                 adapter.setNormalChoiceMode();
         }
     };
 
     private void onEditOptionClicked() {
-        NoteGroupAdapter adapter = (NoteGroupAdapter) noteGroupRecyclerView.getAdapter();
+        NoteGroupAdapter adapter = (NoteGroupAdapter) binding.noteGroupRv.getAdapter();
         if(adapter!=null)
         {
             NoteGroup noteGroup  = adapter.getCheckedNoteGroup();
@@ -220,7 +210,7 @@ public class HomeActivity extends BaseActivity implements HomeView{
     }
 
     private void onShareOptionClicked() {
-        NoteGroupAdapter adapter = (NoteGroupAdapter) noteGroupRecyclerView.getAdapter();
+        NoteGroupAdapter adapter = (NoteGroupAdapter) binding.noteGroupRv.getAdapter();
         if(adapter!=null)
         {
             AppUtility.shareDocuments(this,adapter.getCheckedNoteGroups());
@@ -233,7 +223,7 @@ public class HomeActivity extends BaseActivity implements HomeView{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        NoteGroupAdapter adapter = (NoteGroupAdapter) noteGroupRecyclerView.getAdapter();
+                        NoteGroupAdapter adapter = (NoteGroupAdapter) binding.noteGroupRv.getAdapter();
                         if (adapter != null) {
                             adapter.deleteItems(checkItems);
                             homePresenter.loadNoteGroups();
@@ -272,21 +262,21 @@ public class HomeActivity extends BaseActivity implements HomeView{
 
     @Override
     public void loadNoteGroups(List<NoteGroup> noteGroups) {
-        NoteGroupAdapter adapter = (NoteGroupAdapter) noteGroupRecyclerView.getAdapter();
+        NoteGroupAdapter adapter = (NoteGroupAdapter) binding.noteGroupRv.getAdapter();
         adapter.setNoteGroups(noteGroups);
         adapter.notifyDataSetChanged();
-        noteGroupRecyclerView.requestFocus();
+        binding.noteGroupRv.requestFocus();
 
-        noteGroupRecyclerView.setVisibility(View.VISIBLE);
-        emptyView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.GONE);
+        binding.noteGroupRv.setVisibility(View.VISIBLE);
+        binding.emptyView.setVisibility(View.GONE);
+        binding.progress.setVisibility(View.GONE);
     }
 
     @Override
     public void showEmptyMessage() {
-        noteGroupRecyclerView.setVisibility(View.GONE);
-        emptyView.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
+        binding.noteGroupRv.setVisibility(View.GONE);
+        binding.emptyView.setVisibility(View.VISIBLE);
+        binding.progress.setVisibility(View.GONE);
     }
 
     @Override

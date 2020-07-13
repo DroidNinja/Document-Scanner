@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +26,6 @@ import vi.pdfscanner.db.DBManager;
 import vi.pdfscanner.db.models.NoteGroup;
 import vi.pdfscanner.manager.ImageManager;
 import vi.pdfscanner.utils.DeletePhotoTask;
-import vi.pdfscanner.utils.PhotoUtil;
 
 /**
  * Created by droidNinja on 20/04/16.
