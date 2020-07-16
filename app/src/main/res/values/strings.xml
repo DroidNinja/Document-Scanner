@@ -30,7 +30,7 @@
     <string name="lbl_left">Left</string>
     <string name="lbl_right">Right</string>
     <string name="lbl_crop">Crop</string>
-    <string name="lbl_camera_unavailable">Camera is not available (in use or does not exist).\nPlease close applications, that may use camera.
+    <string name="lbl_camera_unavailable">Camera is not available (in use or does not exist, but also do not forget to check app permissions).\nPlease close applications, that may use camera.
     </string>
     <string name="lbl_zoom_ratio_value">Zoom: %1.2fx</string>
     <string name="lbl_open_photo_preview">Open preview photo after shot</string>
